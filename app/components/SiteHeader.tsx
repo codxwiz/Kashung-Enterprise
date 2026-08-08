@@ -40,7 +40,7 @@ export function SiteFooter() {
     <footer>
       <a className="brand brand--footer" href="/"><Mark /> <span>KASHUNG<small>ENTERPRISE</small></span></a>
       <p>Turning bold ideas into digital reality.</p>
-      <div><span>© 2026 Kashung Enterprise</span><span><a href="/portfolio">Portfolio</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="/contact">Contact</a></span></div>
+      <div><span>© 2026 Kashung Enterprise</span><span className="footer-links"><a href="/portfolio">Portfolio</a><i>·</i><a href="/contact">Contact</a><i>·</i><a href="/terms">Terms</a><i>·</i><a href="/privacy">Privacy</a><i>·</i><a href="/refund-policy">Refunds</a></span></div>
     </footer>
   );
 }
