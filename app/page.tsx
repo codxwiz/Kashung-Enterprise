@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { Mark, SiteFooter, SiteHeader } from "./components/SiteHeader";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
@@ -37,16 +38,6 @@ const steps = [
   ["Build", "Design and engineering move together in focused, visible sprints."],
   ["Launch", "We ship, learn, improve, and stay for the next version."],
 ];
-
-function Mark({ compact = false }: { compact?: boolean }) {
-  return (
-    <span className={`brand-mark ${compact ? "brand-mark--compact" : ""}`} aria-hidden="true">
-      <i />
-      <i />
-      <i />
-    </span>
-  );
-}
 
 function HeroScene() {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -107,7 +98,6 @@ function HeroScene() {
 
 export default function Home() {
   const root = useRef<HTMLElement>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useGSAP(
     () => {
@@ -189,28 +179,7 @@ export default function Home() {
     <main ref={root}>
       <a className="skip-link" href="#main-content">Skip to content</a>
 
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="Kashung Enterprise home">
-          <Mark />
-          <span>KASHUNG<small>ENTERPRISE</small></span>
-        </a>
-        <nav className={menuOpen ? "nav nav--open" : "nav"} aria-label="Primary navigation">
-          <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
-          <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
-          <a className="nav-cta" href="#contact" onClick={() => setMenuOpen(false)}>Start a project <span>↗</span></a>
-        </nav>
-        <button
-          className="menu-button"
-          type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          <span />
-          <span />
-        </button>
-      </header>
+      <SiteHeader />
 
       <section className="hero" id="top">
         <div className="noise" />
@@ -221,7 +190,7 @@ export default function Home() {
             We design and build exceptional websites, software, and apps for the founders shaping tomorrow’s Northeast.
           </p>
           <div className="hero-actions">
-            <a className="button button--primary" href="#contact">Bring us your idea <span>↗</span></a>
+            <a className="button button--primary" href="/contact">Bring us your idea <span>↗</span></a>
             <a className="text-link" href="#services">Explore our capabilities <span>↓</span></a>
           </div>
         </div>
@@ -335,20 +304,16 @@ export default function Home() {
         <div className="contact-grid" aria-hidden="true" />
         <p className="section-label" data-reveal>Have something worth building?</p>
         <h2 data-reveal>Let’s make it<br /><em>real.</em></h2>
-        <a className="contact-button" href="mailto:hello@kashungenterprise.com">
+        <a className="contact-button" href="mailto:kashthot@gmail.com">
           <span>Tell us about your idea</span><b>↗</b>
         </a>
         <div className="contact-meta">
           <span>Manipur · Northeast India</span>
-          <a href="mailto:hello@kashungenterprise.com">hello@kashungenterprise.com</a>
+          <a href="mailto:kashthot@gmail.com">kashthot@gmail.com</a>
         </div>
       </section>
 
-      <footer>
-        <a className="brand brand--footer" href="#top"><Mark /> <span>KASHUNG<small>ENTERPRISE</small></span></a>
-        <p>Turning bold ideas into digital reality.</p>
-        <div><span>© 2026 Kashung Enterprise</span><a href="#top">Back to top ↑</a></div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
