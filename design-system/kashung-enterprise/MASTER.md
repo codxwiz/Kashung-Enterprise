@@ -19,29 +19,29 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#6366F1` | `--color-primary` |
-| On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#818CF8` | `--color-secondary` |
-| Accent/CTA | `#16A34A` | `--color-accent` |
-| Background | `#EEF2FF` | `--color-background` |
-| Foreground | `#312E81` | `--color-foreground` |
-| Muted | `#EBEFF9` | `--color-muted` |
-| Border | `#C7D2FE` | `--color-border` |
+| Primary | `#D6FF3F` | `--acid` |
+| On Primary | `#070807` | `--ink` |
+| Secondary | `#53E0BE` | `--jade` |
+| Accent/CTA | `#D6FF3F` | `--acid` |
+| Background | `#070807` | `--ink` |
+| Foreground | `#F1F0E9` | `--paper` |
+| Muted | `#A1A39A` | `--muted` |
+| Border | `rgba(241,240,233,.16)` | `--line` |
 | Destructive | `#DC2626` | `--color-destructive` |
-| Ring | `#6366F1` | `--color-ring` |
+| Ring | `#D6FF3F` | `--acid` |
 
-**Color Notes:** Digital indigo + buy green [Accent adjusted from #22C55E for WCAG 3:1]
+**Color Notes:** Near-black editorial base, warm paper, acid-lime action, and jade technology detail. The three-bar brand mark uses paper, acid, and jade together.
 
 ### Typography
 
-- **Heading Font:** Clash Display
-- **Body Font:** Satoshi
+- **Heading Font:** Outfit
+- **Body Font:** Manrope
 - **Mood:** startup, bold, modern, innovative, confident, dynamic
-- **Google Fonts:** [Clash Display + Satoshi](https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap)
+- **Google Fonts:** [Outfit + Manrope](https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');
+Use `next/font/google` for Outfit and Manrope; do not add a render-blocking CSS import.
 ```
 
 ### Spacing Variables

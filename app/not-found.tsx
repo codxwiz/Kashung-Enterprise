@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -6,7 +6,9 @@ export default function NotFound() {
       <p className="eyebrow"><i /> 404 · Page not found</p>
       <h1>This idea hasn’t<br /><em>become real yet.</em></h1>
       <p>The page may have moved, or the address may be incomplete.</p>
-      <Link className="button button--primary" href="/">Return home <span>↗</span></Link>
+      {/* Native navigation avoids a vinext production client-router failure. */}
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a className="button button--primary" href="/">Return home <ArrowUpRight aria-hidden="true" /></a>
     </main>
   );
 }

@@ -23,12 +23,14 @@ async function render(pathname) {
 }
 
 const pages = [
-  { path: "/", title: "Kashung Enterprise — Ideas Into Digital Reality", marker: "Ideas deserve", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site" },
+  { path: "/", title: "Kashung Enterprise — Your Idea. Your Business. Online.", marker: "Your business", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site" },
+  { path: "/services", title: "Services | Kashung Enterprise", marker: "Technology built around", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/services" },
+  { path: "/about", title: "About | Kashung Enterprise", marker: "Why we started", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/about" },
   { path: "/portfolio", title: "Selected Work | Kashung Enterprise", marker: "Digital products", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/portfolio" },
   { path: "/contact", title: "Contact | Kashung Enterprise", marker: "Tell us what", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/contact" },
   { path: "/terms", title: "Terms of Service | Kashung Enterprise", marker: "50% upfront", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/terms" },
   { path: "/privacy", title: "Privacy Policy | Kashung Enterprise", marker: "Information we collect", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/privacy" },
-  { path: "/refund-policy", title: "Refund Policy | Kashung Enterprise", marker: "15 calendar days", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/refund-policy" },
+  { path: "/refund-policy", title: "Refund Policy | Kashung Enterprise", marker: "7 calendar days", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/refund-policy" },
 ];
 
 for (const page of pages) {
@@ -51,12 +53,15 @@ for (const page of pages) {
 test("renders complete navigation and policy links", async () => {
   const response = await render("/");
   const html = await response.text();
-  for (const href of ["/portfolio", "/contact", "/terms", "/privacy", "/refund-policy"]) {
+  for (const href of ["/services", "/about", "/portfolio", "/contact", "/terms", "/privacy", "/refund-policy"]) {
     assert.ok(html.includes(`href="${href}"`), `missing link to ${href}`);
   }
   assert.ok(html.includes("mailto:kashthot@gmail.com"));
-  assert.ok(html.includes('href="/#services"'));
-  assert.ok(html.includes('href="/#about"'));
+  assert.ok(html.includes('href="/services"'));
+  assert.ok(html.includes('href="/about"'));
+  assert.ok(html.includes('href="/services#websites"'));
+  assert.ok(html.includes('href="/services#software"'));
+  assert.ok(html.includes('href="/services#apps"'));
 });
 
 test("publishes social, robots, and sitemap metadata", async () => {
@@ -73,6 +78,8 @@ test("publishes social, robots, and sitemap metadata", async () => {
   assert.equal(sitemap.status, 200);
   const xml = await sitemap.text();
   assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/portfolio<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/services<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/about<\/loc>/);
   assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/refund-policy<\/loc>/);
 });
 
@@ -84,4 +91,23 @@ test("portfolio and social images have correct file formats", async () => {
   }
   const social = await readFile(new URL("../public/og.png", import.meta.url));
   assert.deepEqual([...social.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  const hero = await readFile(new URL("../public/hero-crystal.webp", import.meta.url));
+  assert.equal(hero.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.equal(hero.subarray(8, 12).toString("ascii"), "WEBP");
+  const moon = await readFile(new URL("../public/journey-moon.webp", import.meta.url));
+  assert.equal(moon.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.equal(moon.subarray(8, 12).toString("ascii"), "WEBP");
+  for (const name of ["listen", "shape", "build", "launch"]) {
+    const journey = await readFile(new URL(`../public/journey-${name}.webp`, import.meta.url));
+    assert.equal(journey.subarray(0, 4).toString("ascii"), "RIFF");
+    assert.equal(journey.subarray(8, 12).toString("ascii"), "WEBP");
+  }
+});
+
+test("removes decorative sequence counters", async () => {
+  for (const pathname of ["/", "/portfolio", "/contact", "/terms", "/privacy", "/refund-policy"]) {
+    const html = await (await render(pathname)).text();
+    assert.doesNotMatch(html, />0[1-9]\s*\//, `decorative section counter found on ${pathname}`);
+    assert.doesNotMatch(html, /class="project-number"/, `project counter found on ${pathname}`);
+  }
 });

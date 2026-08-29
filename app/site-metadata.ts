@@ -4,7 +4,7 @@ const socialImage = {
   url: "/og.png",
   width: 1731,
   height: 909,
-  alt: "Kashung Enterprise — Ideas deserve to become real",
+  alt: "Kashung Enterprise — Your idea. Your business. Let’s take it online.",
 };
 
 export function createPageMetadata({ title, description, path }: { title: string; description: string; path: string }): Metadata {

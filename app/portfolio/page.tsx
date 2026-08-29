@@ -2,16 +2,17 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 
 if (typeof window !== "undefined") gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const projects = [
   {
     name: "SusBiome",
+    domain: "susbiome.com",
     url: "https://susbiome.com/",
     image: "/portfolio/susbiome.jpg",
     width: 1695,
@@ -23,6 +24,7 @@ const projects = [
   },
   {
     name: "KashNom",
+    domain: "kashnom.com",
     url: "https://kashnom.com/",
     image: "/portfolio/kashnom.jpg",
     width: 1695,
@@ -35,6 +37,7 @@ const projects = [
   },
   {
     name: "KashDAG",
+    domain: "kashdag.com",
     url: "https://kashdag.com/",
     image: "/portfolio/kashdag.jpg",
     width: 1695,
@@ -46,6 +49,7 @@ const projects = [
   },
   {
     name: "Kashintel",
+    domain: "kashintel.com",
     url: "https://kashintel.com/",
     image: "/portfolio/kashintel.jpg",
     width: 1695,
@@ -57,6 +61,7 @@ const projects = [
   },
   {
     name: "Quickash",
+    domain: "quickash.in",
     url: "https://quickash.in/",
     image: "/portfolio/quickash.jpg",
     width: 1695,
@@ -86,31 +91,32 @@ export default function PortfolioPage() {
         <h1>Digital products<br /><em>with a pulse.</em></h1>
         <div className="portfolio-hero-foot">
           <p>Five ambitious products. Five different industries. One standard of strategy, craft, and engineering.</p>
-          <span>05 / SELECTED PROJECTS</span>
+          <span>SELECTED PROJECTS</span>
         </div>
       </section>
 
       <section className="project-list" aria-label="Selected projects">
-        {projects.map((project, index) => (
+        {projects.map((project) => (
           <article className="project-row" key={project.name} style={{ "--project-color": project.color } as React.CSSProperties}>
             {project.available === false ? (
               <div className="project-media project-media--offline">
-                <Image src={project.image} alt={`${project.name} website homepage preview`} width={project.width} height={project.height} sizes="(max-width: 980px) calc(100vw - 44px), 62vw" unoptimized />
+                <div className="project-toolbar" aria-hidden="true"><span className="project-dots"><i /><i /><i /></span><span>{project.domain}</span><ExternalLink /></div>
+                <div className="project-shot"><Image src={project.image} alt={`${project.name} website homepage preview`} width={project.width} height={project.height} sizes="(max-width: 980px) calc(100vw - 44px), 62vw" unoptimized /></div>
                 <span className="project-visit project-visit--static">Live site temporarily unavailable <b>—</b></span>
               </div>
             ) : (
-              <a className="project-media" href={project.url} target="_blank" rel="noreferrer" aria-label={`Visit ${project.name}`}>
-                <Image src={project.image} alt={`${project.name} website homepage preview`} width={project.width} height={project.height} sizes="(max-width: 980px) calc(100vw - 44px), 62vw" unoptimized />
-                <span className="project-visit">View live site <b>↗</b></span>
+              <a className="project-media" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name}`}>
+                <div className="project-toolbar" aria-hidden="true"><span className="project-dots"><i /><i /><i /></span><span>{project.domain}</span><ExternalLink /></div>
+                <div className="project-shot"><Image src={project.image} alt={`${project.name} website homepage preview`} width={project.width} height={project.height} sizes="(max-width: 980px) calc(100vw - 44px), 62vw" unoptimized /></div>
+                <span className="project-visit">View live site <ArrowUpRight aria-hidden="true" /></span>
               </a>
             )}
             <div className="project-info">
-              <div className="project-number">0{index + 1}</div>
               <p>{project.category}</p>
               <h2>{project.name}</h2>
               <p className="project-description">{project.description}</p>
               <ul>{project.capabilities.map((item) => <li key={item}>{item}</li>)}</ul>
-              {project.available === false ? <span className="project-link project-link--offline">Hosting temporarily unavailable <span>—</span></span> : <a className="project-link" href={project.url} target="_blank" rel="noreferrer">Explore {project.name} <span>↗</span></a>}
+              {project.available === false ? <span className="project-link project-link--offline">Hosting temporarily unavailable <span>—</span></span> : <a className="project-link" href={project.url} target="_blank" rel="noopener noreferrer">Explore {project.name} <ArrowUpRight aria-hidden="true" /></a>}
             </div>
           </article>
         ))}
@@ -119,7 +125,7 @@ export default function PortfolioPage() {
       <section className="portfolio-cta">
         <p className="section-label">Your product could be next.</p>
         <h2>Let’s build something<br /><em>worth showing.</em></h2>
-        <Link className="button button--primary" href="/contact">Start a project <span>↗</span></Link>
+        <a className="button button--primary" href="/contact">Start a project <ArrowUpRight aria-hidden="true" /></a>
       </section>
     </main>
   );

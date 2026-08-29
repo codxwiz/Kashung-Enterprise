@@ -19,12 +19,11 @@ export function PolicyPage({ eyebrow, title, intro, updatedAt, sections }: { eye
         <aside aria-label="Policy summary">
           <span>Kashung Enterprise</span>
           <strong>Websites · Software · Apps</strong>
-          <a href="mailto:kashthot@gmail.com">Questions? Email us ↗</a>
+          <a href="mailto:kashthot@gmail.com"><Mail aria-hidden="true" /> Questions? Email us</a>
         </aside>
         <article className="policy-content">
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <section key={section.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
                 <h2>{section.title}</h2>
                 {section.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -36,8 +35,9 @@ export function PolicyPage({ eyebrow, title, intro, updatedAt, sections }: { eye
       </div>
       <div className="policy-contact">
         <p>Need clarification before starting a project?</p>
-        <a href="mailto:kashthot@gmail.com">kashthot@gmail.com <span>↗</span></a>
+        <a href="mailto:kashthot@gmail.com">kashthot@gmail.com <ArrowUpRight aria-hidden="true" /></a>
       </div>
     </main>
   );
 }
+import { ArrowUpRight, Mail } from "lucide-react";

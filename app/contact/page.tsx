@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ArrowUpRight, CircleCheck, Handshake, Layers3, Mail, MapPin } from "lucide-react";
+import { InstagramIcon } from "../components/Icons";
 
 if (typeof window !== "undefined") gsap.registerPlugin(useGSAP);
 
@@ -17,28 +19,29 @@ export default function ContactPage() {
   return (
     <main ref={root} id="main-content" tabIndex={-1} className="inner-page contact-page">
       <section className="contact-page-hero">
-        <p className="eyebrow"><i /> New project enquiries</p>
-        <h1>Tell us what<br />you want to <em>make real.</em></h1>
-        <p className="contact-lead">Share the idea, the problem, or even the rough sketch. We’ll help you find the clearest path forward.</p>
+        <p className="eyebrow"><i /> New business and project enquiries</p>
+        <h1>Tell us what<br />you want to <em>take online.</em></h1>
+        <p className="contact-lead">A business, a skill, or simply an idea—you do not need a technical brief. Tell us how you want it to work and we’ll help shape the clearest way forward.</p>
       </section>
 
-      <section className="contact-choices" aria-label="Contact options">
+      <section className="contact-choices" id="contact-options" aria-label="Contact options">
         <a className="contact-choice contact-choice--email" href="mailto:kashthot@gmail.com?subject=New%20project%20enquiry">
           <div>
-            <span>01 / Email</span>
-            <b>↗</b>
+            <span><Mail aria-hidden="true" /> Email us</span>
+            <ArrowUpRight aria-hidden="true" />
           </div>
+          <div className="contact-choice-icon" aria-hidden="true"><Mail /></div>
           <h2>Start a<br />conversation.</h2>
           <p>kashthot@gmail.com</p>
           <small>Best for briefs, ideas, and project enquiries.</small>
         </a>
 
-        <a className="contact-choice contact-choice--instagram" href="https://www.instagram.com/kashung.enterprise/" target="_blank" rel="noreferrer">
+        <a className="contact-choice contact-choice--instagram" href="https://www.instagram.com/kashung.enterprise/" target="_blank" rel="noopener noreferrer">
           <div>
-            <span>02 / Instagram</span>
-            <b>↗</b>
+            <span><InstagramIcon /> Instagram</span>
+            <ArrowUpRight aria-hidden="true" />
           </div>
-          <div className="instagram-icon" aria-hidden="true"><i /><b /></div>
+          <div className="contact-choice-icon contact-choice-icon--instagram" aria-hidden="true"><InstagramIcon /></div>
           <h2>Follow the<br />build journey.</h2>
           <p>@kashung.enterprise</p>
           <small>Ideas, work in progress, and launches from the studio.</small>
@@ -46,16 +49,16 @@ export default function ContactPage() {
       </section>
 
       <section className="contact-details">
-        <div><span>Based in</span><strong>Manipur, Northeast India</strong></div>
-        <div><span>Building</span><strong>Websites · Software · Apps</strong></div>
-        <div><span>Working with</span><strong>Startups · Entrepreneurs · Teams</strong></div>
+        <div><MapPin aria-hidden="true" /><span>Based in</span><strong>Manipur, Northeast India</strong></div>
+        <div><Layers3 aria-hidden="true" /><span>Building</span><strong>Websites · Software · Apps</strong></div>
+        <div><Handshake aria-hidden="true" /><span>Working with</span><strong>Startups · Entrepreneurs · Teams</strong></div>
       </section>
 
       <section className="contact-promise">
         <h2 className="section-label">What happens next</h2>
-        <div><span>01</span><p>We read your note and understand the opportunity.</p></div>
-        <div><span>02</span><p>We reply with useful questions—not a generic sales pitch.</p></div>
-        <div><span>03</span><p>If there’s a fit, we shape the scope and build plan together.</p></div>
+        <div><CircleCheck aria-hidden="true" /><p>We read your note and understand the opportunity.</p></div>
+        <div><CircleCheck aria-hidden="true" /><p>We reply with useful questions—not a generic sales pitch.</p></div>
+        <div><CircleCheck aria-hidden="true" /><p>If there’s a fit, we shape the scope and build plan together.</p></div>
       </section>
     </main>
   );

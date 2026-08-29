@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { ArrowDown, ArrowUpRight, LayoutTemplate, Smartphone, Workflow } from "lucide-react";
 import { Mark } from "./components/SiteHeader";
+import { InteractiveGlobe } from "./components/InteractiveGlobe";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
@@ -14,30 +16,33 @@ if (typeof window !== "undefined") {
 
 const services = [
   {
-    number: "01",
+    slug: "website",
+    icon: LayoutTemplate,
     title: "Web experiences",
-    copy: "High-converting websites that make ambitious brands feel impossible to ignore.",
-    tags: ["Strategy", "UX/UI", "Development"],
+    copy: "Conversion-led websites, online stores, and booking experiences that turn attention into real business.",
+    tags: ["Business websites", "Online stores", "Bookings"],
   },
   {
-    number: "02",
+    slug: "software",
+    icon: Workflow,
     title: "Software systems",
-    copy: "Purpose-built platforms that remove friction, connect teams, and scale with your vision.",
-    tags: ["Product design", "Engineering", "Cloud"],
+    copy: "Purpose-built systems for operations, payments, customers, and workflows—designed around how you actually work.",
+    tags: ["Business software", "Automation", "Platforms"],
   },
   {
-    number: "03",
+    slug: "apps",
+    icon: Smartphone,
     title: "Apps people keep",
-    copy: "Fast, intuitive mobile and web apps built around real users—not feature checklists.",
-    tags: ["iOS & Android", "Web apps", "Launch"],
+    copy: "Fast, intuitive mobile and web apps that help your service, skill, or new venture reach people anywhere.",
+    tags: ["Mobile apps", "Web apps", "Custom products"],
   },
 ];
 
 const steps = [
-  ["Listen", "We get close to the problem, the people, and the opportunity."],
-  ["Shape", "We turn ambiguity into a sharp product strategy and visual direction."],
-  ["Build", "Design and engineering move together in focused, visible sprints."],
-  ["Launch", "We ship, learn, improve, and stay for the next version."],
+  { slug: "listen", art: "/journey-listen.webp", title: "Listen", copy: "Tell us how you want the business to work. We translate the idea into a clear brief." },
+  { slug: "shape", art: "/journey-shape.webp", title: "Shape", copy: "We define the right product, customer journey, features, and visual direction." },
+  { slug: "build", art: "/journey-build.webp", title: "Build", copy: "Design and engineering move together in focused, visible sprints." },
+  { slug: "launch", art: "/journey-launch.webp", title: "Launch", copy: "We review, refine, deploy, and help you take the business online." },
 ];
 
 function HeroScene() {
@@ -79,16 +84,12 @@ function HeroScene() {
       <div className="scene" ref={sceneRef}>
         <div className="orbit orbit--one" />
         <div className="orbit orbit--two" />
-        <div className="idea-core">
-          <div className="core-face core-face--front">
-            <span>YOUR</span>
-            <strong>IDEA</strong>
+        <div className="idea-crystal">
+          <div className="crystal-rotor">
+            <span className="crystal-depth crystal-depth--rear" />
+            <span className="crystal-depth crystal-depth--middle" />
+            <Image src="/hero-crystal.webp" alt="" fill priority sizes="(max-width: 980px) 70vw, 38vw" />
           </div>
-          <div className="core-face core-face--back" />
-          <div className="core-face core-face--left" />
-          <div className="core-face core-face--right" />
-          <div className="core-face core-face--top" />
-          <div className="core-face core-face--bottom" />
         </div>
         <div className="signal signal--a">STRATEGY</div>
         <div className="signal signal--b">DESIGN</div>
@@ -141,6 +142,19 @@ export default function Home() {
       if (hero) ScrollTrigger.create({ trigger: hero, start: "top bottom", end: "bottom top", onToggle: syncFloatingScene });
       document.addEventListener("visibilitychange", syncFloatingScene);
 
+      const crystalFlip = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+        },
+      });
+      crystalFlip
+        .to(".crystal-rotor", { rotationX: 180, rotationY: 24, rotationZ: -3, scaleX: 1.18, scaleY: 0.97, yPercent: 3, duration: 0.5, ease: "none" })
+        .to(".crystal-rotor", { rotationX: 360, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1, yPercent: 5, duration: 0.5, ease: "none" });
+
       ScrollTrigger.create({
         trigger: ".marquee",
         start: "top bottom",
@@ -186,19 +200,23 @@ export default function Home() {
         });
       }
 
-      gsap.fromTo(
-        ".region-orb",
-        { rotation: -12, scale: 0.82 },
-        {
-          rotation: 18,
-          scale: 1.08,
-          ease: "none",
-          scrollTrigger: { trigger: ".region", start: "top bottom", end: "bottom top", scrub: 1 },
-        },
-      );
+      const regionMotion = gsap.matchMedia();
+      regionMotion.add("(min-width: 621px)", () => {
+        gsap.fromTo(
+          ".region-globe-motion",
+          { y: 70, scale: 0.88 },
+          {
+            y: -35,
+            scale: 1.04,
+            ease: "none",
+            scrollTrigger: { trigger: ".region", start: "top bottom", end: "bottom top", scrub: 1 },
+          },
+        );
+      });
 
       return () => {
         document.removeEventListener("visibilitychange", syncFloatingScene);
+        regionMotion.revert();
         split.revert();
       };
     },
@@ -210,21 +228,21 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="noise" />
         <div className="hero-copy-block">
-          <p className="eyebrow hero-kicker"><i /> Digital product studio · Northeast India</p>
-          <h1 className="hero-title">Ideas deserve<br /><em>to become real.</em></h1>
+          <p className="eyebrow hero-kicker"><i /> For businesses and founders across Northeast India</p>
+          <h1 className="hero-title hero-title--campaign">Your idea.<br /><em>Your business.</em><br />Let’s take it online.</h1>
           <p className="hero-copy">
-            We design and build exceptional websites, software, and apps for the founders shaping tomorrow’s Northeast.
+            You do not need to understand coding. Tell us how your business should work—we’ll build the website, app, store, booking system, or software to make it possible.
           </p>
           <div className="hero-actions">
-            <Link className="button button--primary" href="/contact">Bring us your idea <span>↗</span></Link>
-            <a className="text-link" href="#services">Explore our capabilities <span>↓</span></a>
+            <a className="button button--primary" href="/contact">Take your idea online <ArrowUpRight aria-hidden="true" /></a>
+            <a className="text-link" href="#services">See what we can build <ArrowDown aria-hidden="true" /></a>
           </div>
         </div>
 
         <HeroScene />
 
         <div className="hero-proof">
-          <p>From the first sketch<br />to the first real user.</p>
+          <p>No technical knowledge needed.<br />Just bring the idea.</p>
           <div className="proof-line" />
           <span>Based in Manipur<br />Building across the Northeast</span>
         </div>
@@ -236,9 +254,9 @@ export default function Home() {
           <div>WEBSITE <b>•</b> SOFTWARE <b>•</b> APPS <b>•</b> STRATEGY <b>•</b> DESIGN <b>•</b> ENGINEERING <b>•</b>&nbsp;</div>
         </div>
         <div className="manifesto-inner" data-reveal>
-          <p className="section-label">01 / What we believe</p>
+          <p className="section-label">What we believe</p>
           <blockquote>
-            The next category-defining company can come from <em>anywhere.</em><br />We make sure its technology can go <em>everywhere.</em>
+            Your business can start from <em>home.</em><br />Its customers can come from <em>anywhere.</em>
           </blockquote>
         </div>
       </section>
@@ -246,29 +264,35 @@ export default function Home() {
       <section className="services" id="services">
         <div className="section-heading" data-reveal>
           <div>
-            <p className="section-label">02 / Capabilities</p>
+            <p className="section-label">Capabilities</p>
             <h2>Built to move<br />business forward.</h2>
           </div>
           <p>One senior team from first question to final release. No relay race between strategy, design, and development.</p>
         </div>
         <div className="services-grid">
-          {services.map((service) => (
-            <article className="service-card" key={service.number}>
-              <div className="service-top"><span>{service.number}</span><span>↗</span></div>
-              <div className={`service-art service-art--${service.number}`} aria-hidden="true">
+          {services.map((service) => {
+            const ServiceIcon = service.icon;
+            return (
+            <a className="service-card" href={`/services#${service.slug === "website" ? "websites" : service.slug}`} key={service.slug} aria-label={`${service.title}: learn more`}>
+              <div className="service-top"><span>Built for your idea</span><ArrowUpRight aria-hidden="true" /></div>
+              <div className={`service-art service-art--${service.slug}`} aria-hidden="true">
                 <i /><i /><i /><i />
+                <span className="service-icon"><ServiceIcon /></span>
               </div>
               <h3>{service.title}</h3>
               <p>{service.copy}</p>
-              <ul>{service.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
-            </article>
-          ))}
+              <div className="service-footer">
+                <ul>{service.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
+                <span className="service-cta">Explore this service <ArrowUpRight aria-hidden="true" /></span>
+              </div>
+            </a>
+          )})}
         </div>
       </section>
 
       <section className="process" id="process">
         <div className="process-intro" data-reveal>
-          <p className="section-label">03 / The journey</p>
+          <p className="section-label">The journey</p>
           <h2>From “what if?”<br />to “it’s live.”</h2>
           <p>A clear, collaborative process designed to turn momentum into a product.</p>
         </div>
@@ -276,13 +300,18 @@ export default function Home() {
           <div className="process-track">
             <div className="process-origin">
               <span>START HERE</span>
-              <div className="origin-sphere"><i /></div>
+              <div className="origin-sphere" aria-hidden="true">
+                <Image src="/journey-moon.webp" alt="" fill sizes="(max-width: 620px) 210px, 280px" />
+                <i />
+              </div>
               <strong>AN IDEA</strong>
             </div>
-            {steps.map(([title, copy], index) => (
+            {steps.map(({ slug, art, title, copy }) => (
               <article className="process-step" key={title}>
-                <span>0{index + 1}</span>
-                <div className="step-glyph" aria-hidden="true"><i /><i /></div>
+                <div className={`step-glyph step-glyph--${slug}`} aria-hidden="true">
+                  <i /><i />
+                  <Image className="journey-art" src={art} alt="" width={320} height={320} sizes="(max-width: 620px) 230px, 320px" />
+                </div>
                 <h3>{title}</h3>
                 <p>{copy}</p>
               </article>
@@ -297,41 +326,38 @@ export default function Home() {
       </section>
 
       <section className="region" id="about">
-        <div className="region-orb" aria-hidden="true">
-          <i className="region-ring region-ring--one" />
-          <i className="region-ring region-ring--two" />
-          <i className="region-ring region-ring--three" />
-          <span>NE</span>
+        <div className="region-globe-motion">
+          <InteractiveGlobe />
         </div>
         <div className="region-content" data-reveal>
-          <p className="section-label">04 / Rooted here</p>
+          <p className="section-label">Rooted here</p>
           <h2>Global quality.<br /><em>Northeast perspective.</em></h2>
           <p>
-            We understand the resourcefulness, ambition, and context of founders building from this region. That proximity makes the work sharper—and the partnership stronger.
+            From Manipur, Nagaland, Mizoram, Meghalaya, Arunachal Pradesh, Assam, Tripura, and Sikkim, we help local ideas become digital businesses with reach far beyond their location.
           </p>
           <div className="region-stats">
             <div><strong>8</strong><span>states<br />one ecosystem</span></div>
             <div><strong>1:1</strong><span>senior team<br />collaboration</span></div>
-            <div><strong>∞</strong><span>possibilities<br />worth building</span></div>
+            <div><strong>Local</strong><span>context<br />global ambition</span></div>
           </div>
         </div>
       </section>
 
       <section className="principles">
-        <h2 className="section-label" data-reveal>05 / How we work</h2>
+        <h2 className="section-label" data-reveal>How we work</h2>
         <div className="principle-list">
-          <article data-reveal><span>01</span><h3>Clarity over complexity.</h3><p>Technology should unlock the idea, not overshadow it.</p></article>
-          <article data-reveal><span>02</span><h3>Craft in every detail.</h3><p>People feel quality long before they can explain it.</p></article>
-          <article data-reveal><span>03</span><h3>Partners, not vendors.</h3><p>We share the ambition, the hard questions, and the outcome.</p></article>
+          <article data-reveal><h3>No technical knowledge needed.</h3><p>You explain the idea in your own words. We turn it into a clear digital plan.</p></article>
+          <article data-reveal><h3>Designed around your business.</h3><p>No generic feature checklist—only technology that fits how you sell, serve, book, or operate.</p></article>
+          <article data-reveal><h3>Built to reach further.</h3><p>Your location should shape your perspective, not limit your customers.</p></article>
         </div>
       </section>
 
       <section className="contact" id="contact">
         <div className="contact-grid" aria-hidden="true" />
-        <p className="section-label" data-reveal>Have something worth building?</p>
-        <h2 data-reveal>Let’s make it<br /><em>real.</em></h2>
-        <a className="contact-button" href="mailto:kashthot@gmail.com">
-          <span>Tell us about your idea</span><b>↗</b>
+        <p className="section-label" data-reveal>Your idea. Your business.</p>
+        <h2 data-reveal>Let’s take it<br /><em>online.</em></h2>
+        <a className="contact-button" href="/contact">
+          <span>Tell us about your idea</span><ArrowUpRight aria-hidden="true" />
         </a>
         <div className="contact-meta">
           <span>Manipur · Northeast India</span>
