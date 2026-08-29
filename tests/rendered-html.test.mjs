@@ -73,6 +73,20 @@ test("publishes the phone number on the contact page", async () => {
   assert.ok(html.includes("+91 6009686518"));
 });
 
+test("renders the compact contact enquiry form", async () => {
+  const response = await render("/contact");
+  const html = await response.text();
+  assert.match(html, /<form[^>]*class="contact-form-card"/);
+  for (const name of ["name", "email", "phone", "message"]) {
+    assert.ok(html.includes(`name="${name}"`), `missing ${name} form field`);
+  }
+  assert.ok(html.includes('action="https://formsubmit.co/kashthot@gmail.com"'));
+  assert.match(html, /method="POST"/i);
+  assert.ok(html.includes("Send enquiry"));
+  assert.doesNotMatch(html, /Open email draft/);
+  assert.ok(html.includes("mailto:kashthot@gmail.com"));
+});
+
 test("publishes social, robots, and sitemap metadata", async () => {
   const home = await render("/");
   const html = await home.text();
