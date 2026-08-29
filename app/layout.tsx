@@ -31,10 +31,7 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
   robots: { index: true, follow: true },
-  icons: {
-    icon: [{ url: "/favicon.svg?v=black-lime-jade", type: "image/svg+xml" }],
-    shortcut: "/favicon.svg?v=black-lime-jade",
-  },
+  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
