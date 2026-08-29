@@ -1,22 +1,18 @@
-import { SiteFooter, SiteHeader } from "./SiteHeader";
-
 export type PolicySection = {
   title: string;
   paragraphs?: string[];
   points?: string[];
 };
 
-export function PolicyPage({ eyebrow, title, intro, sections }: { eyebrow: string; title: string; intro: string; sections: PolicySection[] }) {
+export function PolicyPage({ eyebrow, title, intro, updatedAt, sections }: { eyebrow: string; title: string; intro: string; updatedAt: string; sections: PolicySection[] }) {
   return (
-    <main className="inner-page policy-page">
-      <a className="skip-link" href="#policy-content">Skip to content</a>
-      <SiteHeader />
-      <header className="policy-hero" id="policy-content">
+    <main id="main-content" tabIndex={-1} className="inner-page policy-page">
+      <header className="policy-hero">
         <p className="eyebrow"><i /> {eyebrow}</p>
         <h1>{title}</h1>
         <div className="policy-intro">
           <p>{intro}</p>
-          <span>Effective 08 August 2026</span>
+          <span>Last updated {updatedAt}</span>
         </div>
       </header>
       <div className="policy-shell">
@@ -42,7 +38,6 @@ export function PolicyPage({ eyebrow, title, intro, sections }: { eyebrow: strin
         <p>Need clarification before starting a project?</p>
         <a href="mailto:kashthot@gmail.com">kashthot@gmail.com <span>↗</span></a>
       </div>
-      <SiteFooter />
     </main>
   );
 }

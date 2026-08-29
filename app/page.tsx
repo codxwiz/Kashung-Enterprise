@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { Mark, SiteFooter, SiteHeader } from "./components/SiteHeader";
+import { Mark } from "./components/SiteHeader";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
@@ -44,24 +45,31 @@ function HeroScene() {
 
   useEffect(() => {
     const scene = sceneRef.current;
-    if (!scene || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const pointerArea = scene?.parentElement;
+    if (!scene || !pointerArea || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const xTo = gsap.quickTo(scene, "rotationY", { duration: 0.9, ease: "power3.out" });
     const yTo = gsap.quickTo(scene, "rotationX", { duration: 0.9, ease: "power3.out" });
+    let bounds = pointerArea.getBoundingClientRect();
+    const measure = () => { bounds = pointerArea.getBoundingClientRect(); };
     const move = (event: PointerEvent) => {
-      const rect = scene.getBoundingClientRect();
-      xTo(((event.clientX - rect.left) / rect.width - 0.5) * 9);
-      yTo(-((event.clientY - rect.top) / rect.height - 0.5) * 7);
+      xTo(((event.clientX - bounds.left) / bounds.width - 0.5) * 9);
+      yTo(-((event.clientY - bounds.top) / bounds.height - 0.5) * 7);
     };
     const leave = () => {
       xTo(0);
       yTo(0);
     };
-    scene.parentElement?.addEventListener("pointermove", move);
-    scene.parentElement?.addEventListener("pointerleave", leave);
+    pointerArea.addEventListener("pointerenter", measure, { passive: true });
+    pointerArea.addEventListener("pointermove", move, { passive: true });
+    pointerArea.addEventListener("pointerleave", leave);
+    window.addEventListener("resize", measure, { passive: true });
     return () => {
-      scene.parentElement?.removeEventListener("pointermove", move);
-      scene.parentElement?.removeEventListener("pointerleave", leave);
+      pointerArea.removeEventListener("pointerenter", measure);
+      pointerArea.removeEventListener("pointermove", move);
+      pointerArea.removeEventListener("pointerleave", leave);
+      window.removeEventListener("resize", measure);
+      gsap.killTweensOf(scene);
     };
   }, []);
 
@@ -112,18 +120,32 @@ export default function Home() {
 
       const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
       intro
-        .from(".site-header", { y: -32, autoAlpha: 0, duration: 0.8 })
         .from(split.lines, { yPercent: 115, duration: 1.15, stagger: 0.11 }, 0.12)
         .from(".hero-kicker, .hero-copy, .hero-actions", { y: 26, autoAlpha: 0, duration: 0.75, stagger: 0.1 }, 0.45)
         .from(".hero-visual", { scale: 0.84, rotationY: -14, autoAlpha: 0, duration: 1.35 }, 0.2)
         .from(".hero-proof", { y: 24, autoAlpha: 0, duration: 0.7 }, 0.85);
 
-      gsap.to(".scene", {
+      const floatingScene = gsap.to(".scene", {
         y: -22,
         duration: 3.8,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
+      });
+
+      const hero = root.current?.querySelector<HTMLElement>(".hero");
+      const syncFloatingScene = () => {
+        if (document.hidden || (hero && !ScrollTrigger.isInViewport(hero, 0.05))) floatingScene.pause();
+        else floatingScene.play();
+      };
+      if (hero) ScrollTrigger.create({ trigger: hero, start: "top bottom", end: "bottom top", onToggle: syncFloatingScene });
+      document.addEventListener("visibilitychange", syncFloatingScene);
+
+      ScrollTrigger.create({
+        trigger: ".marquee",
+        start: "top bottom",
+        end: "bottom top",
+        toggleClass: { targets: ".marquee", className: "is-visible" },
       });
 
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
@@ -146,18 +168,23 @@ export default function Home() {
         scrollTrigger: { trigger: ".services-grid", start: "top 78%", once: true },
       });
 
-      gsap.to(".process-track", {
-        xPercent: -72,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".process-stage",
-          start: "top top",
-          end: "+=2400",
-          pin: true,
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-        },
-      });
+      const processStage = root.current?.querySelector<HTMLElement>(".process-stage");
+      const processTrack = root.current?.querySelector<HTMLElement>(".process-track");
+      if (processStage && processTrack) {
+        const distance = () => Math.max(0, processTrack.scrollWidth - processStage.clientWidth);
+        gsap.to(processTrack, {
+          x: () => -distance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: processStage,
+            start: "top top",
+            end: () => `+=${Math.max(distance(), window.innerHeight)}`,
+            pin: true,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
 
       gsap.fromTo(
         ".region-orb",
@@ -170,27 +197,26 @@ export default function Home() {
         },
       );
 
-      return () => split.revert();
+      return () => {
+        document.removeEventListener("visibilitychange", syncFloatingScene);
+        split.revert();
+      };
     },
     { scope: root },
   );
 
   return (
-    <main ref={root}>
-      <a className="skip-link" href="#main-content">Skip to content</a>
-
-      <SiteHeader />
-
+    <main ref={root} id="main-content" tabIndex={-1}>
       <section className="hero" id="top">
         <div className="noise" />
-        <div className="hero-copy-block" id="main-content">
+        <div className="hero-copy-block">
           <p className="eyebrow hero-kicker"><i /> Digital product studio · Northeast India</p>
           <h1 className="hero-title">Ideas deserve<br /><em>to become real.</em></h1>
           <p className="hero-copy">
             We design and build exceptional websites, software, and apps for the founders shaping tomorrow’s Northeast.
           </p>
           <div className="hero-actions">
-            <a className="button button--primary" href="/contact">Bring us your idea <span>↗</span></a>
+            <Link className="button button--primary" href="/contact">Bring us your idea <span>↗</span></Link>
             <a className="text-link" href="#services">Explore our capabilities <span>↓</span></a>
           </div>
         </div>
@@ -292,7 +318,7 @@ export default function Home() {
       </section>
 
       <section className="principles">
-        <p className="section-label" data-reveal>05 / How we work</p>
+        <h2 className="section-label" data-reveal>05 / How we work</h2>
         <div className="principle-list">
           <article data-reveal><span>01</span><h3>Clarity over complexity.</h3><p>Technology should unlock the idea, not overshadow it.</p></article>
           <article data-reveal><span>02</span><h3>Craft in every detail.</h3><p>People feel quality long before they can explain it.</p></article>
@@ -313,7 +339,6 @@ export default function Home() {
         </div>
       </section>
 
-      <SiteFooter />
     </main>
   );
 }

@@ -1,91 +1,87 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const templateRoot = new URL("../", import.meta.url);
-const previewRoot = new URL("../app/_sites-preview/", import.meta.url);
+let workerPromise;
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+async function getWorker() {
+  if (!workerPromise) {
+    const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+    workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+    workerPromise = import(workerUrl.href).then((module) => module.default);
+  }
+  return workerPromise;
+}
 
+async function render(pathname) {
+  const worker = await getWorker();
   return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
+    new Request(`http://localhost${pathname}`, { headers: { accept: "text/html" } }),
+    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
+    { waitUntil() {}, passThroughOnException() {} },
   );
 }
 
-test("server-renders the starter loading skeleton", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+const pages = [
+  { path: "/", title: "Kashung Enterprise — Ideas Into Digital Reality", marker: "Ideas deserve", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site" },
+  { path: "/portfolio", title: "Selected Work | Kashung Enterprise", marker: "Digital products", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/portfolio" },
+  { path: "/contact", title: "Contact | Kashung Enterprise", marker: "Tell us what", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/contact" },
+  { path: "/terms", title: "Terms of Service | Kashung Enterprise", marker: "50% upfront", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/terms" },
+  { path: "/privacy", title: "Privacy Policy | Kashung Enterprise", marker: "Information we collect", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/privacy" },
+  { path: "/refund-policy", title: "Refund Policy | Kashung Enterprise", marker: "15 calendar days", canonical: "https://kashung-enterprise.newdiscoveryyt.chatgpt.site/refund-policy" },
+];
 
+for (const page of pages) {
+  test(`server-renders ${page.path}`, async () => {
+    const response = await render(page.path);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+    const html = await response.text();
+    assert.ok(html.includes(`<title>${page.title}</title>`), `missing title for ${page.path}`);
+    assert.ok(html.includes(page.marker), `missing content marker for ${page.path}`);
+    assert.ok(html.includes(`rel="canonical" href="${page.canonical}"`), `missing canonical for ${page.path}`);
+    assert.match(html, /<header class="site-header">/);
+    assert.match(html, /<main[^>]*id="main-content"[^>]*>/);
+    assert.match(html, /<\/main><footer>/);
+    assert.equal((html.match(/id="main-content"/g) ?? []).length, 1);
+    assert.doesNotMatch(html, /Your site is taking shape|codex-preview|SkeletonPreview/);
+  });
+}
+
+test("renders complete navigation and policy links", async () => {
+  const response = await render("/");
   const html = await response.text();
-  assert.match(html, developmentPreviewMeta);
-  assert.match(html, /<title>Your site is taking shape<\/title>/i);
-  assert.match(html, /Building your site/);
-  assert.match(html, /Your site is taking shape/);
-  assert.match(
-    html,
-    /Your first version will appear here automatically when it’s ready\./,
-  );
-  assert.doesNotMatch(html, /Codex/);
-  assert.match(html, /react-loading-skeleton/);
-  assert.match(html, /role="status"/);
+  for (const href of ["/portfolio", "/contact", "/terms", "/privacy", "/refund-policy"]) {
+    assert.ok(html.includes(`href="${href}"`), `missing link to ${href}`);
+  }
+  assert.ok(html.includes("mailto:kashthot@gmail.com"));
+  assert.ok(html.includes('href="/#services"'));
+  assert.ok(html.includes('href="/#about"'));
 });
 
-test("keeps the loading skeleton scoped and disposable", async () => {
-  const [preview, css, page, layout, packageJson, files] = await Promise.all([
-    readFile(new URL("SkeletonPreview.tsx", previewRoot), "utf8"),
-    readFile(new URL("preview.css", previewRoot), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
-    readdir(previewRoot),
-  ]);
+test("publishes social, robots, and sitemap metadata", async () => {
+  const home = await render("/");
+  const html = await home.text();
+  assert.ok(html.includes('property="og:image" content="https://kashung-enterprise.newdiscoveryyt.chatgpt.site/og.png"'));
+  assert.ok(html.includes('name="twitter:card" content="summary_large_image"'));
 
-  assert.deepEqual(files.sort(), ["SkeletonPreview.tsx", "preview.css"]);
-  assert.match(preview, /from "react-loading-skeleton"/);
-  assert.match(preview, /baseColor="#eceae7"/);
-  assert.match(preview, /highlightColor="#f9f8f6"/);
-  assert.match(preview, /duration=\{2\.8\}/);
-  assert.match(preview, /sites-skeleton-search-placeholder/);
-  assert.match(packageJson, /"react-loading-skeleton": "3\.5\.0"/);
+  const robots = await render("/robots.txt");
+  assert.equal(robots.status, 200);
+  assert.match(await robots.text(), /Sitemap: https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/sitemap\.xml/);
 
-  const shellIndex = preview.indexOf('className="sites-skeleton-shell"');
-  const statusIndex = preview.indexOf('className="sites-skeleton-status"');
-  assert.ok(shellIndex >= 0 && statusIndex > shellIndex);
-  assert.match(css, /position:\s*fixed/);
-  assert.match(css, /inset:\s*0/);
-  assert.match(css, /opacity:\s*0\.52/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.doesNotMatch(css, /#020617|canvas|pets|progress/i);
-  assert.doesNotMatch(
-    preview,
-    /loading-spinner|status-mark|status-progress|canvas|cookie|random/i,
-  );
+  const sitemap = await render("/sitemap.xml");
+  assert.equal(sitemap.status, 200);
+  const xml = await sitemap.text();
+  assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/portfolio<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/kashung-enterprise\.newdiscoveryyt\.chatgpt\.site\/refund-policy<\/loc>/);
+});
 
-  assert.match(page, /export const metadata:\s*Metadata/);
-  assert.match(page, /"codex-preview": "development"/);
-  assert.match(page, /<SkeletonPreview \/>/);
-  assert.match(layout, /title:\s*"Starter Project"/);
-  assert.doesNotMatch(layout, /codex-preview|_sites-preview|themeColor|\bViewport\b/);
-  assert.doesNotMatch(css, /(^|\s)(html|body)\s*\{/m);
-
-  await assert.rejects(
-    access(new URL("public/_sites-preview", templateRoot)),
-  );
+test("portfolio and social images have correct file formats", async () => {
+  const jpegNames = ["susbiome", "kashnom", "kashdag", "kashintel", "quickash"];
+  for (const name of jpegNames) {
+    const bytes = await readFile(new URL(`../public/portfolio/${name}.jpg`, import.meta.url));
+    assert.deepEqual([...bytes.subarray(0, 3)], [0xff, 0xd8, 0xff]);
+  }
+  const social = await readFile(new URL("../public/og.png", import.meta.url));
+  assert.deepEqual([...social.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 });

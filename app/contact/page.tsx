@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { SiteFooter, SiteHeader } from "../components/SiteHeader";
 
 if (typeof window !== "undefined") gsap.registerPlugin(useGSAP);
 
@@ -16,10 +15,8 @@ export default function ContactPage() {
   }, { scope: root });
 
   return (
-    <main ref={root} className="inner-page contact-page">
-      <a className="skip-link" href="#contact-content">Skip to content</a>
-      <SiteHeader />
-      <section className="contact-page-hero" id="contact-content">
+    <main ref={root} id="main-content" tabIndex={-1} className="inner-page contact-page">
+      <section className="contact-page-hero">
         <p className="eyebrow"><i /> New project enquiries</p>
         <h1>Tell us what<br />you want to <em>make real.</em></h1>
         <p className="contact-lead">Share the idea, the problem, or even the rough sketch. We’ll help you find the clearest path forward.</p>
@@ -55,12 +52,11 @@ export default function ContactPage() {
       </section>
 
       <section className="contact-promise">
-        <p className="section-label">What happens next</p>
+        <h2 className="section-label">What happens next</h2>
         <div><span>01</span><p>We read your note and understand the opportunity.</p></div>
         <div><span>02</span><p>We reply with useful questions—not a generic sales pitch.</p></div>
         <div><span>03</span><p>If there’s a fit, we shape the scope and build plan together.</p></div>
       </section>
-      <SiteFooter />
     </main>
   );
 }
