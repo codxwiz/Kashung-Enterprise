@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Outfit } from "next/font/google";
 import "./globals.css";
 import { SiteFooter, SiteHeader } from "./components/SiteHeader";
+import { MetaPixel } from "./components/MetaPixel";
 
 const outfit = Outfit({ variable: "--font-outfit", subsets: ["latin"], display: "swap" });
 const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"], display: "swap" });
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         {children}
         <SiteFooter />
+        <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />
       </body>
     </html>
   );
