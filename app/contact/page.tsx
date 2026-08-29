@@ -52,6 +52,7 @@ export default function ContactPage() {
         <div><MapPin aria-hidden="true" /><span>Based in</span><strong>Manipur, Northeast India</strong></div>
         <div><Layers3 aria-hidden="true" /><span>Building</span><strong>Websites · Software · Apps</strong></div>
         <div><Handshake aria-hidden="true" /><span>Working with</span><strong>Startups · Entrepreneurs · Teams</strong></div>
+        <div className="contact-detail--phone"><span>Phone</span><strong><a href="tel:+916009686518">+91 6009686518</a></strong></div>
       </section>
 
       <section className="contact-promise">

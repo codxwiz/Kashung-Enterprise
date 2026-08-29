@@ -57,11 +57,20 @@ test("renders complete navigation and policy links", async () => {
     assert.ok(html.includes(`href="${href}"`), `missing link to ${href}`);
   }
   assert.ok(html.includes("mailto:kashthot@gmail.com"));
+  assert.ok(html.includes('href="https://wa.me/916009686518"'));
+  assert.ok(html.includes("+91 6009686518"));
   assert.ok(html.includes('href="/services"'));
   assert.ok(html.includes('href="/about"'));
   assert.ok(html.includes('href="/services#websites"'));
   assert.ok(html.includes('href="/services#software"'));
   assert.ok(html.includes('href="/services#apps"'));
+});
+
+test("publishes the phone number on the contact page", async () => {
+  const response = await render("/contact");
+  const html = await response.text();
+  assert.ok(html.includes('href="tel:+916009686518"'));
+  assert.ok(html.includes("+91 6009686518"));
 });
 
 test("publishes social, robots, and sitemap metadata", async () => {

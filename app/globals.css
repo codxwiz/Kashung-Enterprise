@@ -230,6 +230,9 @@ footer { min-height: 360px; display: grid; grid-template-columns: 1fr auto; gap:
 .footer-connect a { min-height: 48px; display: inline-flex; align-items: center; gap: 10px; padding: 0 16px; border: 1px solid var(--line); color: #c7c9c1; font-size: 11px; transition: color var(--dur-ui), border-color var(--dur-ui), background var(--dur-ui); }
 .footer-connect a:hover, .footer-connect a:focus-visible { color: var(--ink); border-color: var(--acid); background: var(--acid); }
 .footer-connect svg { width: 17px; }
+.footer-connect--whatsapp span { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; line-height: 1; }
+.footer-connect--whatsapp small { color: #858980; font-size: 9px; font-weight: 500; letter-spacing: .04em; transition: color var(--dur-ui); }
+.footer-connect--whatsapp:hover small, .footer-connect--whatsapp:focus-visible small { color: inherit; }
 .footer-meta { grid-column: 1 / -1; align-self: end; display: flex; justify-content: space-between; margin-top: 76px; padding-top: 24px; border-top: 1px solid var(--line); color: #a4a79e; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
 .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 10px; }
 .footer-links i { color: #353833; font-style: normal; }
@@ -310,11 +313,14 @@ footer { min-height: 360px; display: grid; grid-template-columns: 1fr auto; gap:
 .contact-choice-icon--instagram { transform: translate(-50%,-50%) rotate(7deg); }
 .contact-choice-icon--instagram > svg { width: 52px; height: 52px; color: var(--paper); }
 .contact-choice:hover .contact-choice-icon, .contact-choice:focus-visible .contact-choice-icon { transform: translate(-50%,-50%) rotate(0) scale(1.04); border-color: rgba(241,240,233,.42); }
-.contact-details { max-width: 1360px; margin: 0 auto; padding: 0 clamp(22px,4vw,72px) 140px; display: grid; grid-template-columns: repeat(3,1fr); }
+.contact-details { max-width: 1360px; margin: 0 auto; padding: 0 clamp(22px,4vw,72px) 140px; display: grid; grid-template-columns: repeat(4,1fr); }
 .contact-details div { position: relative; padding: 30px 28px 30px 42px; border-top: 1px solid var(--line); }
 .contact-details div > svg { position: absolute; left: 0; top: 31px; width: 20px; color: var(--acid); }
 .contact-details span { display: block; margin-bottom: 14px; color: #a1a49b; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
 .contact-details strong { font-family: var(--display); font-size: 16px; font-weight: 500; }
+.contact-details .contact-detail--phone { padding-left: 28px; }
+.contact-detail--phone a { font-variant-numeric: tabular-nums; transition: color var(--dur-ui); }
+.contact-detail--phone a:hover, .contact-detail--phone a:focus-visible { color: var(--acid); }
 .contact-promise { padding: 130px clamp(22px,7vw,110px); background: var(--paper); color: var(--ink); }
 .contact-promise .section-label { color: #575a53; }
 .contact-promise > div { display: grid; grid-template-columns: 46px 1fr; align-items: start; gap: 18px; padding: 38px 0; border-top: 1px solid rgba(7,8,7,.2); }
@@ -499,6 +505,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--paper); outline
   footer { grid-template-columns: 1fr; }
   .footer-connect { flex-direction: column; margin-top: 10px; }
   .footer-connect a { width: 100%; justify-content: space-between; }
+  .footer-connect--whatsapp span { align-items: flex-end; }
   .footer-meta { grid-column: 1; margin-top: 40px; gap: 20px; flex-direction: column; }
   .footer-links { justify-content: flex-start; line-height: 2; }
   .footer-links a { min-height: 44px; display: inline-flex; align-items: center; }

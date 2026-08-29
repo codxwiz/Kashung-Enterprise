@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Mail, Menu, X } from "lucide-react";
-import { InstagramIcon, KashungMark } from "./Icons";
+import { InstagramIcon, KashungMark, WhatsAppIcon } from "./Icons";
 
 export function Mark({ compact = false }: { compact?: boolean }) {
   return (
@@ -72,6 +72,10 @@ export function SiteFooter() {
       <div className="footer-connect">
         <a href="mailto:kashthot@gmail.com"><Mail aria-hidden="true" /> Email us</a>
         <a href="https://www.instagram.com/kashung.enterprise/" target="_blank" rel="noopener noreferrer"><InstagramIcon /> Instagram</a>
+        <a className="footer-connect--whatsapp" href="https://wa.me/916009686518" target="_blank" rel="noopener noreferrer" aria-label="Message Kashung Enterprise on WhatsApp at +91 6009686518">
+          <WhatsAppIcon />
+          <span>WhatsApp<small>+91 6009686518</small></span>
+        </a>
       </div>
       <div className="footer-meta"><span>© 2026 Kashung Enterprise · Earth imagery: NASA/GSFC</span><nav className="footer-links" aria-label="Footer navigation"><a href="/services">Services</a><i aria-hidden="true">·</i><a href="/about">About</a><i aria-hidden="true">·</i><a href="/portfolio">Portfolio</a><i aria-hidden="true">·</i><a href="/contact">Contact</a><i aria-hidden="true">·</i><a href="/terms">Terms</a><i aria-hidden="true">·</i><a href="/privacy">Privacy</a><i aria-hidden="true">·</i><a href="/refund-policy">Refunds</a></nav></div>
     </footer>
