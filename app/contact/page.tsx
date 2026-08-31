@@ -143,14 +143,14 @@ export default function ContactPage() {
           <small>Best for briefs, ideas, and project enquiries.</small>
         </a>
 
-        <a className="contact-choice contact-choice--instagram" href="https://www.instagram.com/kashung.enterprise/" target="_blank" rel="noopener noreferrer">
+        <a className="contact-choice contact-choice--instagram" href="https://www.instagram.com/kashungent/" target="_blank" rel="noopener noreferrer">
           <div>
             <span><InstagramIcon /> Instagram</span>
             <ArrowUpRight aria-hidden="true" />
           </div>
           <div className="contact-choice-icon contact-choice-icon--instagram" aria-hidden="true"><InstagramIcon /></div>
           <h2>Follow the<br />build journey.</h2>
-          <p>@kashung.enterprise</p>
+          <p>@kashungent</p>
           <small>Ideas, work in progress, and launches from the studio.</small>
         </a>
       </section>

@@ -57,6 +57,8 @@ test("renders complete navigation and policy links", async () => {
     assert.ok(html.includes(`href="${href}"`), `missing link to ${href}`);
   }
   assert.ok(html.includes("mailto:kashthot@gmail.com"));
+  assert.ok(html.includes('href="https://www.instagram.com/kashungent/"'));
+  assert.doesNotMatch(html, /kashung\.enterprise/);
   assert.ok(html.includes('href="https://wa.me/916009686518"'));
   assert.ok(html.includes("+91 6009686518"));
   assert.ok(html.includes('href="/services"'));

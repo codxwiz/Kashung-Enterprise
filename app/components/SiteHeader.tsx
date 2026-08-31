@@ -71,7 +71,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-connect">
         <a href="mailto:kashthot@gmail.com"><Mail aria-hidden="true" /> Email us</a>
-        <a href="https://www.instagram.com/kashung.enterprise/" target="_blank" rel="noopener noreferrer"><InstagramIcon /> Instagram</a>
+        <a href="https://www.instagram.com/kashungent/" target="_blank" rel="noopener noreferrer"><InstagramIcon /> Instagram</a>
         <a className="footer-connect--whatsapp" href="https://wa.me/916009686518" target="_blank" rel="noopener noreferrer" aria-label="Message Kashung Enterprise on WhatsApp at +91 6009686518">
           <WhatsAppIcon />
           <span>WhatsApp<small>+91 6009686518</small></span>
