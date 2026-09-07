@@ -23,28 +23,27 @@ const projects = [
     capabilities: ["Product strategy", "Climate analytics", "Web platform"],
   },
   {
-    name: "KashNom",
-    domain: "kashnom.com",
-    url: "https://kashnom.com/",
+    name: "Grabtu",
+    domain: "grabtu.com",
+    url: "https://grabtu.com/",
     image: "/portfolio/kashnom.jpg",
     width: 1695,
     height: 833,
     color: "#dfb66d",
     category: "Restaurant technology · SaaS",
-    description: "A connected restaurant operating platform bringing guest ordering, table service, kitchen workflows, and business insights into one clear rhythm.",
+    description: "A connected hospitality platform bringing guest ordering, table service, kitchen workflows, and business insights into one clear rhythm.",
     capabilities: ["SaaS product", "Realtime systems", "Experience design"],
-    available: false,
   },
   {
-    name: "KashDAG",
-    domain: "kashdag.com",
-    url: "https://kashdag.com/",
+    name: "Kashnio",
+    domain: "kashnio.com",
+    url: "https://kashnio.com/",
     image: "/portfolio/kashdag.jpg",
     width: 1695,
     height: 833,
     color: "#6ca2ff",
     category: "Blockchain · Layer 1 infrastructure",
-    description: "A validator-based DAG Layer 1 testnet with deterministic execution and checkpoint-backed finality, presented through a deeply technical cinematic experience.",
+    description: "A validator-based Layer 1 platform with deterministic execution and checkpoint-backed finality, presented through a deeply technical cinematic experience.",
     capabilities: ["Protocol experience", "3D interaction", "Technical storytelling"],
   },
   {
@@ -71,6 +70,18 @@ const projects = [
     description: "A fast, locality-aware grocery marketplace connecting consumers, sellers, riders, and administrators in one mobile-first delivery ecosystem.",
     capabilities: ["Marketplace", "Multi-role platform", "Commerce UX"],
   },
+  {
+    name: "Coraali",
+    domain: "coraali.com",
+    url: "https://coraali.com/",
+    image: "/portfolio/coraali.webp",
+    width: 2000,
+    height: 744,
+    color: "#e69ba8",
+    category: "Beauty commerce · Shopify",
+    description: "A soft-glam cosmetics storefront built for easy discovery, confident product selection, and a polished mobile shopping ritual.",
+    capabilities: ["Ecommerce experience", "Shopify storefront", "Beauty brand system"],
+  },
 ];
 
 export default function PortfolioPage() {
@@ -90,7 +101,7 @@ export default function PortfolioPage() {
         <p className="eyebrow"><i /> Selected work · 2026</p>
         <h1>Digital products<br /><em>with a pulse.</em></h1>
         <div className="portfolio-hero-foot">
-          <p>Five ambitious products. Five different industries. One standard of strategy, craft, and engineering.</p>
+          <p>Six ambitious products. Six different industries. One standard of strategy, craft, and engineering.</p>
           <span>SELECTED PROJECTS</span>
         </div>
       </section>

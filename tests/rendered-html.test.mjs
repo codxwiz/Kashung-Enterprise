@@ -114,6 +114,9 @@ test("portfolio and social images have correct file formats", async () => {
     const bytes = await readFile(new URL(`../public/portfolio/${name}.jpg`, import.meta.url));
     assert.deepEqual([...bytes.subarray(0, 3)], [0xff, 0xd8, 0xff]);
   }
+  const coraali = await readFile(new URL("../public/portfolio/coraali.webp", import.meta.url));
+  assert.equal(coraali.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.equal(coraali.subarray(8, 12).toString("ascii"), "WEBP");
   const social = await readFile(new URL("../public/og.png", import.meta.url));
   assert.deepEqual([...social.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   const hero = await readFile(new URL("../public/hero-crystal.webp", import.meta.url));
@@ -127,6 +130,14 @@ test("portfolio and social images have correct file formats", async () => {
     assert.equal(journey.subarray(0, 4).toString("ascii"), "RIFF");
     assert.equal(journey.subarray(8, 12).toString("ascii"), "WEBP");
   }
+});
+
+test("portfolio reflects the current project lineup", async () => {
+  const html = await (await render("/portfolio")).text();
+  for (const value of ["grabtu.com", "kashnio.com", "coraali.com", "Coraali"]) {
+    assert.ok(html.includes(value), `missing portfolio project ${value}`);
+  }
+  assert.doesNotMatch(html, /kashnom\.com|kashdag\.com|KashNom|KashDAG/);
 });
 
 test("removes decorative sequence counters", async () => {
